@@ -1,0 +1,53 @@
+﻿@model ExpenseTracker.Models.Category
+
+@{
+    ViewData["Title"] = "Update Category Page";
+}
+
+<div class="container mt-4">
+
+    <div class="row">
+        <div class="col-md-6">
+
+            <h3 class="mb-3">Update Category</h3>
+
+            <form asp-action="Update"
+                  asp-controller="Category"
+                  method="post">
+
+                  <input type="hidden" asp-for="Id" />
+
+                <div class="mb-3">
+                    <label asp-for="Name" class="form-label">
+                        Category Name
+                    </label>
+
+                    <input asp-for="Name"
+                           type="text"
+                           class="form-control"
+                           placeholder="Enter category name" />
+
+                    <span asp-validation-for="Name"
+                          class="text-danger small"></span>
+                </div>
+
+                <button type="submit" class="btn btn-success btn-sm">
+                    Save
+                </button>
+
+                <a asp-action="Index"
+                   asp-controller="Category"
+                   class="btn btn-danger btn-sm">
+                    Cancel
+                </a>
+
+            </form>
+
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

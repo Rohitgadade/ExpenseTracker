@@ -1,0 +1,45 @@
+﻿@model IList<ExpenseTracker.Models.Expense>
+
+@{
+    ViewData["Title"] = "Expense Page";
+}
+
+<a asp-action="Create" asp-controller="Expense" class="btn btn-primary btn-sm">Add Expense</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Title</th>
+            <th scope="col">Amount</th>
+            <th scope="col">Date</th>
+            <th scope="col">Category</th>
+            <th scope="col">Description</th>
+            <th scope="col">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            @foreach (var expense in Model)
+            {
+                <tr>
+                    <td>@expense.Title</td>
+                    <td>₹@expense.Amount.ToString("N2")</td>
+                    <td>@expense.Date?.ToString("dd-MM-yyyy")</td>
+                    <td>@expense.Category?.Name</td>
+                    <td>@expense.Description</td>
+                    <td>
+                        <a asp-action="Update" asp-controller="Expense" asp-route-id="@expense.Id" class="btn btn-secondary btn-sm">Update</a>
+                        <a asp-action="Delete" asp-controller="Expense" asp-route-id="@expense.Id" class="btn btn-danger btn-sm">Delete</a>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="6" class="text-center">No expenses found.</td>
+            </tr>
+        }
+    </tbody>
+</table>
