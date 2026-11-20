@@ -14,30 +14,32 @@ namespace ExpenseTracker.Controllers
         public async Task<IActionResult> Index()
         {
             //total expenses
-            var totalSpend = _context.Expenses.Sum(e => e.Amount);
+            var totalSpend = await _context.Expenses.SumAsync(e => e.Amount);
 
             //Total Spend this month
             var today = DateTime.Today;
-            var totalSpendMonth = _context.Expenses.Where(e => e.Date.HasValue &&
-            e.Date.Value.Month == today.Month &&
-            e.Date.Value.Year == today.Year).Sum(e => e.Amount);
+            var totalSpendMonth = await _context.Expenses
+                .Where(e => e.Date.HasValue &&
+                            e.Date.Value.Month == today.Month &&
+                            e.Date.Value.Year == today.Year)
+                .SumAsync(e => e.Amount);
 
             //Total SpendLst month
             var lastMonth = today.AddMonths(-1);
 
-            var totalSpendMonthLast = _context.Expenses
+            var totalSpendMonthLast = await _context.Expenses
                 .Where(e => e.Date.HasValue &&
                             e.Date.Value.Month == lastMonth.Month &&
                             e.Date.Value.Year == lastMonth.Year)
-                .Sum(e => e.Amount);
+                .SumAsync(e => e.Amount);
 
             //Total transactions
-            var totalTransactions = _context.Expenses.Count();
+            var totalTransactions = await _context.Expenses.CountAsync();
 
             // Get current year's monthly expenses
             var currentYear = DateTime.Today.Year;
 
-            var monthlyData = _context.Expenses
+            var monthlyData = await _context.Expenses
                 .Where(e => e.Date.HasValue &&
                             e.Date.Value.Year == currentYear)
                 .GroupBy(e => e.Date!.Value.Month)
@@ -46,7 +48,7 @@ namespace ExpenseTracker.Controllers
                     Month = g.Key,
                     Total = g.Sum(e => e.Amount)
                 })
-                .ToList();
+                .ToListAsync();
 
             // Add all 12 months, including months with zero expenses
             var monthlyExpenses = Enumerable.Range(1, 12)
