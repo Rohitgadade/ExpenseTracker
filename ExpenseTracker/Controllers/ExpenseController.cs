@@ -35,6 +35,11 @@ namespace ExpenseTracker.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(ExpenseViewModel model)
         {
+            if (model.Date.HasValue && model.Date.Value.Date > DateTime.Today)
+            {
+                ModelState.AddModelError("Date", "Future dates are not allowed.");
+            }
+
             if (!ModelState.IsValid)
             {
                 model.CategoriesList = await GetCategoriesAsync();
@@ -80,6 +85,11 @@ namespace ExpenseTracker.Controllers
         [HttpPost]
         public async Task<IActionResult> Update(ExpenseViewModel model)
         {
+            if (model.Date.HasValue && model.Date.Value.Date > DateTime.Today)
+            {
+                ModelState.AddModelError("Date", "Future dates are not allowed.");
+            }
+
             if (!ModelState.IsValid)
             {
                 model.CategoriesList = await GetCategoriesAsync();

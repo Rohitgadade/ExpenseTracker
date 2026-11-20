@@ -30,7 +30,7 @@ namespace ExpenseTracker.Controllers
                 _context.Categories.Add(category);
                 await _context.SaveChangesAsync();
 
-              return  RedirectToAction("Index");
+                return RedirectToAction("Index");
             }
 
             return View(category);
@@ -62,7 +62,7 @@ namespace ExpenseTracker.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var category = await _context.Categories.FindAsync(id);
-            if(category == null)
+            if (category == null)
             {
                 return NotFound();
             }
@@ -73,14 +73,14 @@ namespace ExpenseTracker.Controllers
         public async Task<IActionResult> DeleteConfirm(int Id)
         {
             var category = await _context.Categories.FindAsync(Id);
-           if(category == null)
+            if (category == null)
             {
                 return NotFound();
             }
-                _context.Categories.Remove(category);
-                await _context.SaveChangesAsync();
+            _context.Categories.Remove(category);
+            await _context.SaveChangesAsync();
 
-                return RedirectToAction("Index");
+            return RedirectToAction("Index");
         }
 
     }

@@ -28,7 +28,7 @@
 			<div class="col-md-6">
 				<div class="mb-3">
 					<label asp-for="Date" class="form-label"></label>
-					<input asp-for="Date" type="date" class="form-control" />
+					<input asp-for="Date" type="date" class="form-control" max="@DateTime.Today.ToString("yyyy-MM-dd")" />
 					<span asp-validation-for="Date" class="text-danger"></span>
 				</div>
 
@@ -52,8 +52,8 @@
 			</div>
 
 			<div class="col-md-12 mt-2">
-				<button type="submit" class="btn btn-primary">
-					<i class="bi bi-save"></i> Save Changes
+				<button type="submit" class="btn btn-warning">
+					<i class="bi bi-save"></i> Save
 				</button>
 				<a asp-action="Index" class="btn btn-secondary">Cancel</a>
 			</div>
