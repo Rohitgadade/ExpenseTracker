@@ -9,10 +9,25 @@ namespace ExpenseTracker.Controllers
     {
         public readonly ApplicationDbContext _context = context;
 
-        public async Task<IActionResult> Index()
+        [HttpGet]
+        public async Task<IActionResult> Index(string? search)
         {
-            var category = await _context.Categories.AsNoTracking().ToListAsync();
-            return View(category);
+            search = search?.Trim();
+
+            IQueryable<Category> categories = _context.Categories.AsNoTracking();
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                categories = categories.Where(category =>
+                    EF.Functions.Like(category.Name, $"%{search}%"));
+            }
+
+            var categoryList = await categories
+                .OrderBy(category => category.Name)
+                .ToListAsync();
+
+            ViewBag.SearchTerm = search;
+            return View(categoryList);
         }
 
         [HttpGet]

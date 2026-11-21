@@ -4,7 +4,36 @@
 	ViewData["Title"] = " Category Page";
 }
 
-<a asp-action="Create" asp-controller="Category" class="btn btn-primary">Add Category</a>
+<div class="d-flex justify-content-between align-items-center mb-3">
+
+    <a asp-action="Create" asp-controller="Category"
+       class="btn btn-primary">
+        Add Category
+    </a>
+
+    <form asp-action="Index" method="get" asp-controller="Category" role="search">
+        <div class="d-flex gap-2">
+            <input type="search"
+                   name="search"
+                   value="@ViewBag.SearchTerm"
+                   class="form-control"
+                   placeholder="Search category..."
+                   maxlength="50"
+                   aria-label="Search categories" />
+
+            <button type="submit" class="btn btn-success">
+                Search
+            </button>
+
+            @if (!string.IsNullOrEmpty(ViewBag.SearchTerm))
+            {
+                <a asp-action="Index" asp-controller="Category" class="btn btn-outline-secondary">
+                    Clear
+                </a>
+            }
+        </div>
+    </form>
+</div>
 
 <table class="table">
     <thead>

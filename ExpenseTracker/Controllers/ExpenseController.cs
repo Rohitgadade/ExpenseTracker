@@ -4,21 +4,50 @@ using ExpenseTracker.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace ExpenseTracker.Controllers
 {
     public class ExpenseController(ApplicationDbContext context) : Controller
     {
         private readonly ApplicationDbContext _context = context;
-
-        public async Task<IActionResult> Index()
+        [HttpGet]
+        public async Task<IActionResult> Index(string? search, int? categoryId)
         {
-            var expenses = await _context.Expenses
+            search = search?.Trim();
+
+            IQueryable<Expense> expenses = _context.Expenses
                 .AsNoTracking()
-                .Include(expense => expense.Category)
+                .Include(expense => expense.Category);
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                expenses = expenses.Where(expense => EF.Functions.Like(expense.Title, $"%{search}%"));
+            }
+
+            if (categoryId.HasValue)
+            {
+                expenses = expenses.Where(expense => expense.CategoryId == categoryId.Value);
+            }
+
+            var expensesList = await expenses
+                .OrderByDescending(expense => expense.Date)
                 .ToListAsync();
 
-            return View(expenses);
+            ViewBag.SearchTerm = search;
+            ViewBag.CategoryId = categoryId;
+            ViewBag.Categories = await _context.Categories
+                .AsNoTracking()
+                .OrderBy(category => category.Name)
+                .Select(category => new SelectListItem
+                {
+                    Value = category.Id.ToString(),
+                    Text = category.Name,
+                    Selected = category.Id == categoryId
+                })
+                .ToListAsync();
+
+            return View(expensesList);
         }
 
         [HttpGet]
